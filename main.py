@@ -4,18 +4,18 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import joblib
 
-# Load the dataset
+# Load the dataset from the Excel file
 data = pd.read_excel("your_dataset.xlsx")
 
-# Explicitly set feature names
-feature_names = ['Ammonia', 'Methane', 'pH_level', 'Lightness_L']
+# Explicitly set feature names including 'Temperature'
+feature_names = ['Ammonia', 'Methane', 'pH_level', 'Lightness_L', 'Temperature']
 
-# Rename columns
+# Rename columns to match the specified feature names and add the 'Freshness' column
 data.columns = feature_names + ['Freshness']
 
-# Split data into features and target variable
-X = data.drop(columns=['Freshness'])
-y = data['Freshness']
+# Split data into features (X) and target variable (y)
+X = data.drop(columns=['Freshness'])  # Features (independent variables)
+y = data['Freshness']  # Target variable (dependent variable)
 
 # Split data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -23,7 +23,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # Initialize the logistic regression model
 model = LogisticRegression()
 
-# Train the model
+# Train the model with explicit feature names
 model.fit(X_train, y_train)
 
 # Make predictions on the test set
@@ -37,7 +37,7 @@ print("Accuracy:", accuracy)
 joblib.dump(model, 'logistic_regression_model.pkl')
 
 # Now, let's predict the freshness of a new data point
-new_data = [[0.15, 0.08, 6.7, 48]]
+new_data = [[0.25, 0.133, 6.5, 42, 23]]
 
 # Load the saved model from disk
 loaded_model = joblib.load('logistic_regression_model.pkl')
