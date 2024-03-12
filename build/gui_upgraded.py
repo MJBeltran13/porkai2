@@ -10,7 +10,7 @@ from PIL import Image, ImageTk
 from tkinter import Tk, Canvas, Button, PhotoImage
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\USER\Documents\GitHub\porkai2\build\assets\frame0")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame0")
 
 
 def relative_to_assets(path: str) -> Path:
@@ -110,8 +110,12 @@ def start_camera():
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame = Image.fromarray(frame)
+
+            # Resize the image to the desired dimensions
+            frame = frame.resize((414, 281), Image.LANCZOS)
+
             frame = ImageTk.PhotoImage(frame)
-            canvas.create_image(442.0000000000001, 14.0, anchor="nw", image=frame)
+            canvas.create_image(442.0000000000001, 14.0, anchor="nw", image=frame, tags=("camera_output",))
             canvas.frame = frame  # to prevent garbage collection
             canvas.after(10, update_frame)
         else:
@@ -129,7 +133,7 @@ button_1 = Button(
 )
 button_1.place(
     x=453.0000000000001,
-    y=451.0,
+    y=446.0,
     width=129.0,
     height=50.0
 )
@@ -183,12 +187,12 @@ canvas.create_text(
 )
 
 canvas.create_text(
-    752.0000000000001,
-    469.0,
+    742.0000000000001,
+    460.0,
     anchor="nw",
-    text="FRESH",
+    text="Evaluating",
     fill="#FFFFFF",
-    font=("PalanquinDark Regular", 15 * -1)
+    font=("AlfaSlabOne Regular", 15 * -1)
 )
 
 canvas.create_text(
