@@ -1,9 +1,9 @@
+# gui.py
+
 from pathlib import Path
 import cv2
 from PIL import Image, ImageTk
-
-# from tkinter import *
-# Explicit imports to satisfy Flake8
+import main_copy
 from tkinter import Tk, Canvas, Button, PhotoImage
 
 OUTPUT_PATH = Path(__file__).parent
@@ -13,11 +13,26 @@ ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame0")
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+start_x = 0
+start_y = 0
+
+def on_drag(event):
+    x = window.winfo_pointerx() - start_x
+    y = window.winfo_pointery() - start_y
+    window.geometry("+{}+{}".format(x, y))
+
+def on_click(event):
+    global start_x, start_y
+    start_x = event.x
+    start_y = event.y
 
 window = Tk()
 
 window.geometry("862x519")
 window.configure(bg="#FFB700")
+
+window.bind("<B1-Motion>", on_drag)
+window.bind("<Button-1>", on_click)
 
 canvas = Canvas(
     window,
@@ -98,7 +113,6 @@ image_7 = canvas.create_image(
 button_image_1 = PhotoImage(
     file=relative_to_assets("button_1.png"))
 
-
 def start_camera():
     cap = cv2.VideoCapture(0)
 
@@ -108,24 +122,137 @@ def start_camera():
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame = Image.fromarray(frame)
 
-            # Resize the image to the desired dimensions
             frame = frame.resize((414, 281), Image.LANCZOS)
 
             frame = ImageTk.PhotoImage(frame)
             canvas.create_image(442.0000000000001, 14.0, anchor="nw", image=frame, tags=("camera_output",))
-            canvas.frame = frame  # to prevent garbage collection
+            canvas.frame = frame
             canvas.after(10, update_frame)
         else:
             cap.release()
 
     update_frame()
 
+new_text = []
+
+def start():
+    canvas.delete("text")
+    start_camera()
+    start_preheating()
+    canvas.after(1000, read_data_and_update_canvas)
+
+def read_data_and_update_canvas():
+    canvas.delete("text")
+    canvas.delete(image_1)
+    canvas.create_image(
+        646.0000000000001,
+        474.0,
+        image=image_image_2
+    )
+    canvas.create_text(
+        755.0000000000001,
+        464.0,
+        anchor="nw",
+        text="Evaluating",
+        fill="#FFFFFF",
+        font=("AlfaSlabOne Regular", 15 * -1),
+        tags=("text",)
+    )
+    new_text = main_copy.get_sensor_data_with_prediction()
+    if new_text:
+        new_text = new_text[0]  # Extracting the array from the tuple
+        update_canvas_with_new_text(new_text)
+    else:
+        print("Error: new_text list is empty or incomplete.")
+   
+    
+def start_preheating():
+    canvas.create_image(
+    646.0000000000001,
+    474.0,
+    image=image_image_1)
+
+    canvas.delete(image_3)
+    canvas.delete(image_2)
+
+    canvas.create_text(
+        755.0000000000001,
+        464.0,
+        anchor="nw",
+        text="Preheating",
+        fill="#FFFFFF",
+        font=("AlfaSlabOne Regular", 15 * -1),
+        tags=("text",)
+    )
+
+def update_canvas_with_new_text(new_text):
+    canvas.delete("text")
+
+    canvas.create_text(
+        493.0000000000001,
+        324.0,
+        anchor="nw",
+        text=str(new_text[0]),
+        fill="#000000",
+        font=("AlfaSlabOne Regular", 15 * -1),
+        tags=("text",)
+    )
+
+    canvas.create_text(
+        637.0000000000001,
+        324.0,
+        anchor="nw",
+        text=str(new_text[1]),
+        fill="#000000",
+        font=("AlfaSlabOne Regular", 15 * -1),
+        tags=("text",)
+    )
+
+    canvas.create_text(
+        781.0000000000001,
+        324.0,
+        anchor="nw",
+        text=str(new_text[2]),
+        fill="#000000",
+        font=("AlfaSlabOne Regular", 15 * -1),
+        tags=("text",)
+    )
+
+    canvas.create_text(
+        556.0000000000001,
+        386.0,
+        anchor="nw",
+        text=str(int(new_text[4])),
+        fill="#000000",
+        font=("AlfaSlabOne Regular", 15 * -1),
+        tags=("text",)
+    )
+
+    canvas.create_text(
+        718.0000000000001,
+        386.0,
+        anchor="nw",
+        text=str(new_text[3]),
+        fill="#000000",
+        font=("AlfaSlabOne Regular", 15 * -1),
+        tags=("text",)
+    )
+
+    canvas.create_text(
+        755.0000000000001,
+        464.0,
+        anchor="nw",
+        text=str(new_text[5]),
+        fill="#FFFFFF",
+        font=("AlfaSlabOne Regular", 15 * -1),
+        tags=("text",)
+    )
 
 button_1 = Button(
     image=button_image_1,
     borderwidth=0,
     highlightthickness=0,
-    command=start_camera,
+    command=start,
     relief="flat"
 )
 button_1.place(
@@ -156,58 +283,5 @@ image_10 = canvas.create_image(
     337.0,
     image=image_image_10)
 
-canvas.create_text(
-    493.0000000000001,
-    324.0,
-    anchor="nw",
-    text="5.21",
-    fill="#000000",
-    font=("AlfaSlabOne Regular", 15 * -1)
-)
-
-canvas.create_text(
-    556.0000000000001,
-    386.0,
-    anchor="nw",
-    text="5.22",
-    fill="#000000",
-    font=("AlfaSlabOne Regular", 15 * -1)
-)
-
-canvas.create_text(
-    718.0000000000001,
-    386.0,
-    anchor="nw",
-    text="5.23",
-    fill="#000000",
-    font=("AlfaSlabOne Regular", 15 * -1)
-)
-
-canvas.create_text(
-    742.0000000000001,
-    460.0,
-    anchor="nw",
-    text="Evaluating",
-    fill="#FFFFFF",
-    font=("AlfaSlabOne Regular", 15 * -1)
-)
-
-canvas.create_text(
-    637.0000000000001,
-    324.0,
-    anchor="nw",
-    text="5.24",
-    fill="#000000",
-    font=("AlfaSlabOne Regular", 15 * -1)
-)
-
-canvas.create_text(
-    781.0000000000001,
-    324.0,
-    anchor="nw",
-    text="5.25",
-    fill="#000000",
-    font=("AlfaSlabOne Regular", 15 * -1)
-)
 window.resizable(False, False)
 window.mainloop()
