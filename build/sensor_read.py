@@ -2,6 +2,7 @@ import serial
 import time
 import cv2
 import numpy as np
+import camera
 
 # Open serial connection
 ser = serial.Serial('COM8', 115200)  # Replace 'COM1' with the appropriate port
@@ -43,6 +44,8 @@ def get_L_star(image):
 
 # Main function
 def main():
+    # Capture an image
+    camera.capture_image(1,'test.jpg')
     # Read sensor values
     sensor_data = read_sensor_values()
 
