@@ -114,7 +114,7 @@ button_image_1 = PhotoImage(
     file=relative_to_assets("button_1.png"))
 
 def start_camera():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
 
     def update_frame():
         ret, frame = cap.read()
@@ -162,6 +162,7 @@ def read_data_and_update_canvas():
     if new_text:
         new_text = new_text[0]  # Extracting the array from the tuple
         update_canvas_with_new_text(new_text)
+        print(new_text)
     else:
         print("Error: new_text list is empty or incomplete.")
    

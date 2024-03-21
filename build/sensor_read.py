@@ -18,6 +18,7 @@ def read_sensor_values():
             sensor_values.append(value)
     
     # Get L* value
+    camera.capture_image(1,'test.jpg')
     image = cv2.imread('test.jpg')
     if image is None:
         print("Error loading image")
@@ -45,7 +46,7 @@ def get_L_star(image):
 # Main function
 def main():
     # Capture an image
-    camera.capture_image(1,'test.jpg')
+    
     # Read sensor values
     sensor_data = read_sensor_values()
 
